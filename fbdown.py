@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 import sys
 import argparse
 argm = argparse.ArgumentParser(description='Fbdown.py is tool for download fucking video in facebook')
-argm.add_argument('--url',help="URL video U want to download")
+argm.add_argument('--url',help="URL video U want to download",required=True)
 args = argm.parse_args()
 site = 'https://www.getfvid.com/downloader'
 headers = {
