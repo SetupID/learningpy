@@ -39,7 +39,7 @@ t=tqdm(total=total_size, unit='iB', unit_scale=True)
 with open(filename, 'wb') as f:
 	try: 
 		for d in dl.iter_content(block_size):
-			t.update(len(data))
+			t.update(len(d))
 			# f.write(dl.content)
 			f.write(d)
 	except KeyboardInterrupt:
