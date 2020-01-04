@@ -3,3 +3,4 @@ tqdm
 datetime
 bs4
 argparse
+art
