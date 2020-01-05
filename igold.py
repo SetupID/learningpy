@@ -39,7 +39,6 @@ def cek(list):
 				result = []
 				for a in scrap:
 					val = a.find_all('span')
-					print
 					for v in val:
 						result.append(v.contents[0])
 				print(ijo(f"[Not Bad][Email : {list[i][0]}][pass : {list[i][1]}][Saldo : {result[2]}]"))
