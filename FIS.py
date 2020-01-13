@@ -33,24 +33,28 @@ def golek(film):
 	h2 = header.update({'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
 	req = requests.get(s,headers=header).text
 	scrap = bs(req,'html.parser')
-	div = scrap.find('div',{'class': 'content-thumbnail text-center'})
-	link = div.a.get('href')
-	al = requests.get(link,headers=header).text #access link
-	scrp = bs(al,'html.parser')
-	id = scrp.find('div',{'id':'muvipro_player_content_id'}).get('data-id')
-	d = {'action':'muvipro_player_content','tab':'player1','post_id':id}
-	pos = requests.post('https://kawanfilm21.online/wp-admin/admin-ajax.php',headers=h2,data=d).text
-	result['title'] = scrp.find('h1',{'class':'entry-title'}).get_text()
-	result['description'] = scrp.find_all('p')[1].get_text()
-	result['quality'] = scrp.find('span',{'class':'gmr-movie-quality'}).a.get_text()
-	stream = bs(pos,'html.parser').iframe.get('src')
-	result['streaming'] = 'https:'+stream
-	gl = []  #get link
-	for l in scrp.find_all('ul',{'class':'list-inline gmr-download-list clearfix'}):
-		for a in l.find_all('a'):
-			gl.append({a.get_text() : a.get('href')})
-	result['download_link'] = gl
-	return result
+	try:
+		div = scrap.find('div',{'class': 'content-thumbnail text-center'})
+		link = div.a.get('href')
+		al = requests.get(link,headers=header).text #access link
+		scrp = bs(al,'html.parser')
+		id = scrp.find('div',{'id':'muvipro_player_content_id'}).get('data-id')
+		d = {'action':'muvipro_player_content','tab':'player1','post_id':id}
+		pos = requests.post('https://kawanfilm21.online/wp-admin/admin-ajax.php',headers=h2,data=d).text
+		result['title'] = scrp.find('h1',{'class':'entry-title'}).get_text()
+		result['description'] = scrp.find_all('p')[1].get_text()
+		result['quality'] = scrp.find('span',{'class':'gmr-movie-quality'}).a.get_text()
+		stream = bs(pos,'html.parser').iframe.get('src')
+		result['streaming'] = 'https:'+stream
+		gl = []  #get link
+		for l in scrp.find_all('ul',{'class':'list-inline gmr-download-list clearfix'}):
+			for a in l.find_all('a'):
+				gl.append({a.get_text() : a.get('href')})
+		result['download_link'] = gl
+		return result
+	except AttributeError:
+		print(abang(f'Film "{args.s}"" not found'))
+		sys.exit()
 def cetak(hasil):
 	print(abang("[Judul] : "+ijo(hasil['title'])))
 	print(abang("[Deskripsi] :"+ijo(hasil['description'])))
