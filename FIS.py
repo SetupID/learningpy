@@ -1,6 +1,15 @@
 #!/usr/bin/python3
 #-*- visit : <heartscode.net/> -*-
 
+########################################################################
+#[installasi termux]
+#wget https://raw.githubusercontent.com/SetupID/learningpy/master/FIS.py 
+#pip install requests,sys,argparse,bs4,sty
+#[installasi linux]
+#wget https://raw.githubusercontent.com/SetupID/learningpy/master/FIS.py 
+#pip3 install requests,sys,argparse,bs4,sty
+########################################################################
+
 import requests,sys,argparse
 from bs4 import BeautifulSoup as bs
 from sty import fg,rs
